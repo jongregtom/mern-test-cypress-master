@@ -55,6 +55,14 @@ context("Actions", () => {
     });
   })
 
+  it("should be able to mark a todo completed", () => {
+    const updatedTodo = todos[1];
+    cy.contains("Edit").click();
+    cy.get('input[name="completedCheckbox"]').click();
+    cy.get("input").contains("Update Todo").click();
+    cy.get("td").contains(updatedTodo.description).should('have.class', 'completed');
+  })
+
   it("should be able to delete a todo", () => {
     const updatedTodo = todos[1];
     cy.contains("Edit").click();
