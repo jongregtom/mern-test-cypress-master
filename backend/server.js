@@ -69,7 +69,15 @@ todoRoutes.route("/update/:id").post(function(req, res) {
 todoRoutes.route("/delete/:id").delete(function(req, res) {
   Todo.findById(req.params.id, function(err, todo) {
     if (!todo) res.status(404).send("data is not found");
-    else res.json("Todo deleted");
+    else todo
+      .delete()
+      .then(todo => {
+        res.json("Todo updated");
+      })
+      .catch(err => {
+        res.status(400).send("Update not possible");
+      });
+    //else res.json("Todo deleted");
   });
 });
 
