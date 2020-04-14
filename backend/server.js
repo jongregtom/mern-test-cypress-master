@@ -72,12 +72,11 @@ todoRoutes.route("/delete/:id").delete(function(req, res) {
     else todo
       .delete()
       .then(todo => {
-        res.json("Todo updated");
+        res.json("Todo deleted");
       })
       .catch(err => {
-        res.status(400).send("Update not possible");
+        res.status(400).send("Delete not possible");
       });
-    //else res.json("Todo deleted");
   });
 });
 
