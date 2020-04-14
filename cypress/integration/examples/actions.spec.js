@@ -1,22 +1,12 @@
 /// <reference types="Cypress" />
+import { newTodo, updatedTodo } from '../../fixtures/todos';
+delete newTodo.todo_completed;
+delete updatedTodo.todo_completed;
 
 context("Actions", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000");
   });
-
-  const todos = [
-    {
-      description: "Make Kessel Run in less than 12 parsecs",
-      responsible: "Han Solo",
-      priority: "Medium"
-    },
-    {
-      description: "Wash hands, wear mask, stay safe",
-      responsible: "Everyone",
-      priority: "High"
-    }
-  ]
 
   // https://on.cypress.io/interacting-with-elements
 
@@ -25,11 +15,11 @@ context("Actions", () => {
   });
 
   it("should be able to add a todo", () => {
-    const newTodo = todos[0];
     //create todo
+    cy.log('newTodo: newTodo')
     cy.get(".navbar-item").contains("Create Todo").click();
-    cy.get(".form-group").contains("Description: ").parent().find("input").type(newTodo.description);
-    cy.get(".form-group").contains("Responsible: ").parent().find("input").type(newTodo.responsible);
+    cy.get(".form-group").contains("Description: ").parent().find("input").type(newTodo.todo_description);
+    cy.get(".form-group").contains("Responsible: ").parent().find("input").type(newTodo.todo_responsible);
     cy.get("#priorityMedium").click();
     cy.get(".form-group").contains("Create Todo").click();
     //verify todo is displayed with all user inputs and priority level
@@ -41,11 +31,9 @@ context("Actions", () => {
   })
 
   it("should be able to update a todo", () => {
-    const originalTodo = todos[0];
-    const updatedTodo = todos[1];
     cy.contains("Edit").click();
-    cy.get(".form-group").contains("Description: ").parent().find("input").clear().type(updatedTodo.description);
-    cy.get(".form-group").contains("Responsible: ").parent().find("input").clear().type(updatedTodo.responsible);
+    cy.get(".form-group").contains("Description: ").parent().find("input").clear().type(updatedTodo.todo_description);
+    cy.get(".form-group").contains("Responsible: ").parent().find("input").clear().type(updatedTodo.todo_responsible);
     cy.get("#priorityHigh").click();
     cy.get("input").contains("Update Todo").click();
     cy.get("td").should(($td) => {
@@ -56,15 +44,13 @@ context("Actions", () => {
   })
 
   it("should be able to mark a todo completed", () => {
-    const updatedTodo = todos[1];
     cy.contains("Edit").click();
     cy.get('input[name="completedCheckbox"]').click();
     cy.get("input").contains("Update Todo").click();
-    cy.get("td").contains(updatedTodo.description).should('have.class', 'completed');
+    cy.get("td").contains(updatedTodo.todo_description).should('have.class', 'completed');
   })
 
   it("should be able to delete a todo", () => {
-    const updatedTodo = todos[1];
     cy.contains("Edit").click();
     cy.get('input[value="Delete Todo"]').click();
     cy.get("tbody").should('not.have.descendants');
