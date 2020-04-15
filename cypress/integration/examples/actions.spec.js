@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { newTodo, updatedTodo } from '../../fixtures/todos';
+//remove todo_completed key from todo fixures, interferes with test functionality
 delete newTodo.todo_completed;
 delete updatedTodo.todo_completed;
 
@@ -14,9 +15,8 @@ context("Actions", () => {
     cy.get(".container > div > h3").should("have.text", "Todos List");
   });
 
-  it("should be able to add a todo", () => {
+  it("add todo", () => {
     //create todo
-    cy.log('newTodo: newTodo')
     cy.get(".navbar-item").contains("Create Todo").click();
     cy.get(".form-group").contains("Description: ").parent().find("input").type(newTodo.todo_description);
     cy.get(".form-group").contains("Responsible: ").parent().find("input").type(newTodo.todo_responsible);
@@ -30,7 +30,7 @@ context("Actions", () => {
     });
   })
 
-  it("should be able to update a todo", () => {
+  it("update existing todo", () => {
     cy.contains("Edit").click();
     cy.get(".form-group").contains("Description: ").parent().find("input").clear().type(updatedTodo.todo_description);
     cy.get(".form-group").contains("Responsible: ").parent().find("input").clear().type(updatedTodo.todo_responsible);
@@ -43,14 +43,14 @@ context("Actions", () => {
     });
   })
 
-  it("should be able to mark a todo completed", () => {
+  it("mark todo completed", () => {
     cy.contains("Edit").click();
     cy.get('input[name="completedCheckbox"]').click();
     cy.get("input").contains("Update Todo").click();
     cy.get("td").contains(updatedTodo.todo_description).should('have.class', 'completed');
   })
 
-  it("should be able to delete a todo", () => {
+  it("delete todo", () => {
     cy.contains("Edit").click();
     cy.get('input[value="Delete Todo"]').click();
     cy.get("tbody").should('not.have.descendants');

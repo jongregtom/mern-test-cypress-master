@@ -11,10 +11,23 @@ context("API", () => {
         });
     })
 
+    it("Get todo by ID", () => {
+        cy.request("/todos")
+        .then((res) => {
+            const id = res.body[0]._id;
+            cy.request(`/todos/${id}`)
+            .then((res) => {
+                const { _id, todo_description } = res.body;
+                expect(_id).to.equal(id);
+                expect(todo_description).to.equal(newTodo.todo_description);
+            })
+        })
+    })
+
     it("update todo", () => {
+        //get todo id
         cy.request("/todos/")
         .then((res) => {
-            //get todo id
             const id = res.body[0]._id;
             //update todo
             cy.request('POST', `/todos/update/${id}`, updatedTodo)
@@ -25,9 +38,9 @@ context("API", () => {
     })
 
     it("delete todo", () => {
+        //get todo id
         cy.request("/todos/")
         .then((res) => {
-            //get todo id
             const id = res.body[0]._id;
             //delete todo
             cy.request('DELETE', `/todos/delete/${id}`)
